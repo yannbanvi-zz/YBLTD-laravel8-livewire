@@ -1,0 +1,70 @@
+
+1- Gestion clientèle:
+==> Constituer une BD des clients et améliorer l'offre
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure d'enregistrer un client ou de mettre à jour ses informations d'identité dans le syteme.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure de consulter les informations d'identification d'un client, consulter les locations effectuées/encours/annulées de ce dernier.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure de créer les offres promotionnelles spécifiques tenant compte dans le mois/l'année de la fréquence de locations des clients.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure d'imprimer la liste de tous les clients de manière générale ou filtrée.
+
+___________________________________________________________________________________________________
+
+2- Gestion des locations
+==> Faire la location des articles
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure d'ajouter et de mettre à jour une location d'articles.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure de consulter un calendrier de locations d'un article.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure de d'annuler une location en attente.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure d'imprimer la liste des locations effectuées par article entre deux dates.
+
+___________________________________________________________________________________________________
+
+
+3- Gestion de l'inventaire
+==> Constituer une base de données des articles & Gérer le stock
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure d'ajouter un article dans le stock.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure de  mettre à jour les informations d'un article en stock.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure de consulter les articles disponibles dans le stock.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure de rendre un article indisponible.
+
+
+___________________________________________________________________________________________________
+
+4- Gestion des recettes
+==> Gérer les encaissements et decaissements
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure d'encaisser le paiement d'une location et d'en délivrer un reçu.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure de décaisser pour annulation d'une location/pour reduction de la durée de location.
+
+** En tant que manager de l'entreprise et ayant les droits requis, je souhaite être en mésure de consulter les encaissements effectués selon une date donnée ainsi que l'employé effectuant l'opération.
+
+** En tant que manager de l'entreprise et ayant les droits requis, je souhaite être en mésure de consulter les decaissements effectués selon une date donnée ainsi que leurs motifs.
+
+___________________________________________________________________________________________________
+
+5- Gestion des recouvrements
+=> Envoyer des mails de relance, Faire le suivi des delais de reglements
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure d'envoyer les mails de relance de réglement aux clients de manière automatique et sur demande.
+
+** En tant qu'employé(e) de l'entreprise et ayant les droits requis, je souhaite être en mésure d'avoir une vue sur les locations dont les delais de regléments ont expirés.
+
+** En tant que manager de l'entreprise et ayant les droits requis, je souhaite être en mésure de consulter le montant total à recouvrir par mois.
+
+___________________________________________________________________________________________________
+
+6- Reporting
+=> Rapport journalier en PDF et envoie de mail
+
+** En tant que manager de l'entreprise et ayant les droits requis, je souhaite être en mésure de recevoir en fin de journée par mail un résumé de l'ensemble des transactions effectuées (encaissement, décaissements), les recouvrements effectués, le nombre de locations, le nombre de nouveaux clients .
