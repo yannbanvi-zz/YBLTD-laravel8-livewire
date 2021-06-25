@@ -14,8 +14,8 @@ class CreateArticleLocationTable extends Migration
     public function up()
     {
         Schema::create('article_location', function (Blueprint $table) {
-            $table->foreignId("article_id");
-            $table->foreignId("location_id");
+            $table->foreignId("article_id")->constrained();
+            $table->foreignId("location_id")->constrained();
         });
 
         Schema::enableForeignKeyConstraints();

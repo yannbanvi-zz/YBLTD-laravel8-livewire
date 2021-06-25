@@ -19,8 +19,11 @@ class CreateArticlesTable extends Migration
             $table->string("noSerie");
             $table->string("imageUrl")->nullable();
             $table->boolean("estDisponible")->default(1);
+            $table->foreignId("type_article_id")->constrained();
             $table->timestamps();
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -30,6 +33,9 @@ class CreateArticlesTable extends Migration
      */
     public function down()
     {
+        Schema::table("articles", function(Blueprint $table){
+            $table->dropForeign("type_article_id");
+        });
         Schema::dropIfExists('articles');
     }
 }

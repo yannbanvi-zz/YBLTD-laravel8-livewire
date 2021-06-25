@@ -29,8 +29,8 @@ class CreateUserPermissionTable extends Migration
     public function down()
     {
         Schema::table('user_permission', function (Blueprint $table) {
-            $table->dropForeign("user_id");
-            $table->dropForeign("permission_id");
+            $table->dropForeign("user_id")->constrained();
+            $table->dropForeign("permission_id")->constrained();
         });
 
         Schema::dropIfExists('user_permission');
