@@ -1,3 +1,16 @@
 
 @import "~admin-lte/plugins/fontawesome-free/css/all.css";
+@import "~admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css";
 @import "~admin-lte/dist/css/adminlte.css";
+
+
+.login-box{
+    transform: translateY(-100px);
+    min-width : 700px;
+}
+
+.ellipsis{
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+}
