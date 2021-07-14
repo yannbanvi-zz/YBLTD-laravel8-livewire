@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use App\Models\Article;
 use App\Models\TypeArticle;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,14 +17,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Le groupe des routes relatives aux administrateurs uniquement
+Route::group([
+    "middleware" => ["auth", "auth.admin"],
+    'as' => 'admin.'
+], function(){
+
+    Route::group([
+        "prefix" => "habilitations",
+        'as' => 'habilitations.'
+    ], function(){
+
+        Route::get("/utilisateurs", [UserController::class, "index"])->name("users.index");
+        //Route::get("/rolesetpermissions", [UserController::class, "index"])->name("rolespermissions.index");
+        //
+
+    });
+
+
 });
 
-Route::get('/articles', function () {
-    return Article::with("type")->get();
-});
 
-Route::get('/types', function () {
-    return TypeArticle::with("articles")->paginate(5);
-});
