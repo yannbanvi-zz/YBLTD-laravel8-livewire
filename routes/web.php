@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Livewire\TypeArticleComp;
 use App\Http\Livewire\Utilisateurs;
 use App\Models\Article;
 use App\Models\TypeArticle;
@@ -36,6 +37,15 @@ Route::group([
         Route::get("/utilisateurs", Utilisateurs::class)->name("users.index");
         //Route::get("/rolesetpermissions", [UserController::class, "index"])->name("rolespermissions.index");
         //
+
+    });
+
+    Route::group([
+        "prefix" => "gestarticles",
+        'as' => 'gestarticles.'
+    ], function(){
+
+        Route::get("/typearticles", TypeArticleComp::class)->name("typearticles");
 
     });
 
