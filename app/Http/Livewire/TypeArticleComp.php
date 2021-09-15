@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\ProprieteArticle;
 use App\Models\TypeArticle;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
@@ -16,11 +17,13 @@ class TypeArticleComp extends Component
     public $isAddTypeArticle = false;
     public $newTypeArticleName = "";
     public $newValue = "";
+    public $selectedTypeArticle;
 
     protected $paginationTheme = "bootstrap";
 
     public function render()
     {
+
         Carbon::setLocale("fr");
 
         $searchCriteria = "%".$this->search."%";
@@ -81,9 +84,25 @@ class TypeArticleComp extends Component
             ]
         ]]);
     }
+
     public function deleteTypeArticle(TypeArticle $typeArticle){
         $typeArticle->delete();
         $this->dispatchBrowserEvent("showSuccessMessage", ["message"=>"Type d'article supprimé avec succès!"]);
     }
+
+    public function showProp(TypeArticle $typeArticle){
+
+        $this->selectedTypeArticle = $typeArticle;
+
+        $this->dispatchBrowserEvent("showModal", []);
+
+
+    }
+
+    public function closeModal(){
+        $this->dispatchBrowserEvent("closeModal", []);
+    }
+
+
 
 }
