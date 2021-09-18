@@ -18,6 +18,8 @@ class CreateProprieteArticlesTable extends Migration
             $table->string("nom");
             $table->boolean("estObligatoire")->default(1);
             $table->foreignId("type_article_id")->constrained();
+
+            $table->unique(["nom", "type_article_id"]);
         });
 
         Schema::enableForeignKeyConstraints();

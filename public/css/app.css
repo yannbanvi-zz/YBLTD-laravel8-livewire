@@ -57042,3 +57042,11 @@ a.text-muted:hover {
     overflow:hidden;
 }
 
+.modal.fade{
+    background: rgba(0,0,0,0.7);
+}
+
+.modal-backdrop.fade{
+    opacity: 0;
+}
+

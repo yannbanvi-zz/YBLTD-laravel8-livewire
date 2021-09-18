@@ -16,6 +16,8 @@ class TypeArticleComp extends Component
     public $search = "";
     public $isAddTypeArticle = false;
     public $newTypeArticleName = "";
+    public $newPropModel = [];
+    public $editPropModel = [];
     public $newValue = "";
     public $selectedTypeArticle;
 
@@ -29,7 +31,8 @@ class TypeArticleComp extends Component
         $searchCriteria = "%".$this->search."%";
 
         $data = [
-            "typearticles" => TypeArticle::where("nom", "like", $searchCriteria)->latest()->paginate(5)
+            "typearticles" => TypeArticle::where("nom", "like", $searchCriteria)->latest()->paginate(5),
+            "proprietesTypeArticles" => ProprieteArticle::where("type_article_id", optional($this->selectedTypeArticle)->id)->get()
         ];
         return view('livewire.typearticles.index', $data)
                 ->extends("layouts.master")
@@ -99,8 +102,79 @@ class TypeArticleComp extends Component
 
     }
 
+    public function addProp(){
+        $validated = $this->validate([
+            "newPropModel.nom" => [
+                "required",
+                Rule::unique("propriete_articles", "nom")->where("type_article_id", $this->selectedTypeArticle->id)
+            ],
+            "newPropModel.estObligatoire" => "required"
+        ]);
+
+        ProprieteArticle::create([
+            "nom" => $this->newPropModel["nom"],
+            "estObligatoire" => $this->newPropModel["estObligatoire"],
+            "type_article_id" => $this->selectedTypeArticle->id,
+        ]);
+
+        $this->newPropModel = [];
+        $this->resetErrorBag();
+
+        $this->dispatchBrowserEvent("showSuccessMessage", ["message"=>"Propriété ajoutée avec succès!"]);
+    }
+
+    function showDeletePrompt($name , $id){
+        $this->dispatchBrowserEvent("showConfirmMessage", ["message"=> [
+            "text" => "Vous êtes sur le point de supprimer '$name' de la liste des propriétés d'articles. Voulez-vous continuer?",
+            "title" => "Êtes-vous sûr de continuer?",
+            "type" => "warning",
+            "data" => [
+                "propriete_id" => $id
+            ]
+        ]]);
+    }
+
+    public function deleteProp(ProprieteArticle $proprieteArticle){
+
+        $proprieteArticle->delete();
+        $this->dispatchBrowserEvent("showSuccessMessage", ["message"=>"Propriété supprimée avec succès!"]);
+    }
+
+    public function editProp(ProprieteArticle $proprieteArticle){
+
+        $this->editPropModel["nom"] = $proprieteArticle->nom;
+        $this->editPropModel["estObligatoire"] = $proprieteArticle->estObligatoire;
+        $this->editPropModel["id"] = $proprieteArticle->id;
+
+        $this->dispatchBrowserEvent("showEditModal", []);
+    }
+
+    public function updateProp(){
+        $this->validate([
+            "editPropModel.nom" => [
+                "required",
+                Rule::unique("propriete_articles", "nom")->ignore($this->editPropModel["id"])
+            ],
+            "editPropModel.estObligatoire" => "required"
+        ]);
+
+        ProprieteArticle::find($this->editPropModel["id"])->update([
+            "nom" => $this->editPropModel["nom"],
+            "estObligatoire" => $this->editPropModel["estObligatoire"]
+        ]);
+
+        $this->dispatchBrowserEvent("showSuccessMessage", ["message"=>"Propriété mise à jour avec succès!"]);
+        $this->closeEditModal();
+    }
+
     public function closeModal(){
         $this->dispatchBrowserEvent("closeModal", []);
+    }
+
+    public function closeEditModal(){
+        $this->editPropModel = [];
+        $this->resetErrorBag();
+        $this->dispatchBrowserEvent("closeEditModal", []);
     }
 
 
