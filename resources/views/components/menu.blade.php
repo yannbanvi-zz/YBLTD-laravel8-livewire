@@ -75,14 +75,15 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="{{ route('admin.gestarticles.typearticles') }}"
-                        class="nav-link {{ setMenuActive('admin.gestarticles.typearticles') }}">
+                    <a href="{{ route('admin.gestarticles.types') }}"
+                        class="nav-link {{ setMenuActive('admin.gestarticles.types') }}">
                     <i class="nav-icon far fa-circle"></i>
                     <p>Type d'articles</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('admin.gestarticles.articles') }}"
+                        class="nav-link {{ setMenuActive('admin.gestarticles.articles') }}">
                     <i class="nav-icon fas fa-list-ul"></i>
                     <p>Articles</p>
                     </a>

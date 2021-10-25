@@ -17,4 +17,8 @@ class TypeArticle extends Model
         return $this->hasMany(Article::class);
     }
 
+    public function proprietes(){
+        return $this->hasMany(ProprieteArticle::class);
+    }
+
 }

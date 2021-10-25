@@ -9,7 +9,7 @@
                    <div class="d-flex my-4 bg-gray-light p-3">
                         <div class="d-flex flex-grow-1 mr-2">
                             <div class="flex-grow-1 mr-2">
-                                <input type="text" placeholder="Nom" wire:keypress.enter="addProp()" wire:model="newPropModel.nom" class="form-control @error("newPropModel.nom") is-invalid @enderror">
+                                <input type="text" placeholder="Nom"  wire:model="newPropModel.nom" class="form-control @error("newPropModel.nom") is-invalid @enderror">
                                 @error("newPropModel.nom")
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
