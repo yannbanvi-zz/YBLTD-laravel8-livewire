@@ -6,13 +6,16 @@ use App\Models\Article;
 use App\Models\ArticlePropriete;
 use App\Models\TypeArticle;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Intervention\Image\Facades\Image;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class ArticleComp extends Component
 {
 
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     protected $paginationTheme = "bootstrap";
 
@@ -20,6 +23,9 @@ class ArticleComp extends Component
     public $filtreType = "", $filtreEtat = "";
     public $addArticle = [];
     public $proprietesArticles = null;
+    public $addPhoto = null;
+    public $inputFileIterator = 0;
+
 
 
     public function render()
@@ -61,11 +67,15 @@ class ArticleComp extends Component
         $this->resetValidation();
         $this->addArticle = [];
         $this->proprietesArticles = [];
+        $this->addPhoto = null;
+        $this->inputFileIterator++;
         $this->dispatchBrowserEvent("showModal");
     }
 
     public function closeModal(){
         $this->dispatchBrowserEvent("closeModal");
+
+
     }
 
     public function editArticle(Article $article){
@@ -83,6 +93,7 @@ class ArticleComp extends Component
             "addArticle.nom" => "string|min:3|required",
             "addArticle.noSerie" => "string|max:50|min:3|required",
             "addArticle.type" => "required",
+            "addPhoto" => "image|max:10240" // 10mb
 
         ];
 
@@ -110,13 +121,22 @@ class ArticleComp extends Component
 
         // Validation des erreurs
         $validatedData = $this->validate($validateArr, $customErrMessages);
+        $imagePath = "";
 
+        if($this->addPhoto != null){
 
+            $imagePath = $this->addPhoto->store('upload', 'public');
+
+            $image = Image::make(public_path("storage/".$imagePath))->fit(200, 200);
+            $image->save();
+
+        }
 
         $article = Article::create([
             "nom" => $validatedData["addArticle"]["nom"],
             "noSerie" => $validatedData["addArticle"]["noSerie"],
             "type_article_id" => $validatedData["addArticle"]["type"],
+            "imageUrl" => $imagePath
         ]);
 
 
@@ -132,5 +152,23 @@ class ArticleComp extends Component
         $this->dispatchBrowserEvent("showSuccessMessage", ["message"=>"Article ajouté avec succès!"]);
 
         $this->closeModal();
+
+
+    }
+
+    protected function cleanupOldUploads(){
+
+        $storage = Storage::disk("local");
+
+        foreach($storage->allFiles("livewire-tmp") as $pathFileName){
+
+            if(! $storage->exists($pathFileName)) continue;
+
+            $fiveSecondsDelete = now()->subSeconds(5)->timestamp;
+
+            if($fiveSecondsDelete > $storage->lastModified($pathFileName)){
+                $storage->delete($pathFileName);
+            }
+        }
     }
 }

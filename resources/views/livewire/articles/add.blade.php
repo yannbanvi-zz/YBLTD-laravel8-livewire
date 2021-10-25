@@ -63,10 +63,13 @@
 
                             <div class="p-4" >
                                         <div class="form-group">
-                                            <input type="file">
+                                            <input type="file" wire:model="addPhoto" id="image{{$inputFileIterator}}">
                                         </div>
-                                        <div style="border: 1px solid #d0d1d3; border-radius: 20px; height: 200px;">
+                                        <div style="border: 1px solid #d0d1d3; border-radius: 20px; height: 200px; width:200px; overflow:hidden;">
+                                                @if ($addPhoto)
 
+                                                    <img src="{{ $addPhoto->temporaryUrl() }}" style="height:200px; width:200px;">
+                                                @endif
                                         </div>
                              </div>
                     </div>

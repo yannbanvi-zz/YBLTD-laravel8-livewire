@@ -10,7 +10,7 @@ class Article extends Model
     use HasFactory;
 
     public $fillable = [
-        "nom", "noSerie", "type_article_id"
+        "nom", "noSerie", "type_article_id", "imageUrl"
     ];
 
 
@@ -28,6 +28,10 @@ class Article extends Model
 
     public function proprietes(){
         return $this->belongsToMany(ProprieteArticle::class,"article_propriete", "article_id", "propriete_article_id");
+    }
+
+    public function article_proprietes(){
+        return $this->hasMany(ArticlePropriete::class);
     }
 
 }
