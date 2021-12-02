@@ -54,11 +54,7 @@
                             @forelse ($articles as $article)
                                 <tr>
                                     <td>
-                                        @if ($article->imageUrl != "" || $article->imageUrl != null)
-                                            <img src="{{asset('storage/'.$article->imageUrl)}}" alt="" style="width:60px;height:60px;">
-                                        @else
-                                            <img src="{{asset('images/imageplaceholder.png')}}" alt="" style="width:60px;height:60px;">
-                                        @endif
+                                        <img src="{{asset($article->imageUrl)}}" alt="" style="width:60px;height:60px;">
 
                                     </td>
                                     <td>{{ $article->nom }} - {{ $article->noSerie }}</td>

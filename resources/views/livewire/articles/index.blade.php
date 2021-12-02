@@ -1,6 +1,7 @@
 <div>
-
+   @if ($editArticle != [])
     @include("livewire.articles.edit")
+   @endif 
 
     @include("livewire.articles.add")
 
@@ -9,11 +10,7 @@
 
 </div>
 
-<script>
-    window.addEventListener("showEditForm",function(e){
 
-    })
-</script>
 
 <script>
     window.addEventListener("showSuccessMessage", event=>{
@@ -42,12 +39,9 @@
         cancelButtonText: 'Annuler'
         }).then((result) => {
         if (result.isConfirmed) {
-            if(event.detail.message.data.type_article_id){
-
-            }
-
-            if(event.detail.message.data.propriete_id){
-
+            const article_id = event.detail.message.data.article_id
+            if(article_id){
+                @this.deleteArticle(article_id)
             }
         }
         })
@@ -67,13 +61,13 @@
     })
 
     window.addEventListener("showEditModal", event=>{
-       $("#editModalProp").modal({
+       $("#editModal").modal({
            "show": true,
            "backdrop": "static"
        })
     })
     window.addEventListener("closeEditModal", event=>{
-       $("#editModalProp").modal("hide")
+       $("#editModal").modal("hide")
     })
 
 </script>

@@ -7,6 +7,7 @@ use App\Models\ArticlePropriete;
 use App\Models\TypeArticle;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Intervention\Image\Facades\Image;
 use Livewire\WithFileUploads;
@@ -22,11 +23,44 @@ class ArticleComp extends Component
     public $search = "";
     public $filtreType = "", $filtreEtat = "";
     public $addArticle = [];
+    public $editArticle = [];
     public $proprietesArticles = null;
     public $addPhoto = null;
+    public $editPhoto = null;
     public $inputFileIterator = 0;
+    public $inputEditFileIterator = 0;
+    public $editHasChanged;
+    public $editArticleOldValues = [];
 
+    protected function rules () {
+        return [
+            'editArticle.nom' => ["required", Rule::unique("articles", "nom")->ignore($this->editArticle["id"])],
+            'editArticle.noSerie' => ["required", Rule::unique("articles", "noSerie")->ignore($this->editArticle["id"])],
+            'editArticle.type_article_id' => 'required|exists:App\Models\TypeArticle,id',
+            'editArticle.article_proprietes.*.valeur' => 'required',
+        ];
+    } 
 
+    
+
+    function showUpdateButton(){
+        $this->editHasChanged = false;
+
+        foreach ($this->editArticleOldValues["article_proprietes"] as $index => $editArticleOld) {
+            if($this->editArticle["article_proprietes"][$index]["valeur"] != $editArticleOld["valeur"]){
+                $this->editHasChanged = true;
+            }
+        }
+
+        if(
+            $this->editArticle["nom"] != $this->editArticleOldValues["nom"] ||
+            $this->editArticle["noSerie"] != $this->editArticleOldValues["noSerie"] ||
+            $this->editPhoto != null
+        ){
+            $this->editHasChanged = true;
+        }
+
+    }
 
     public function render()
     {
@@ -36,6 +70,7 @@ class ArticleComp extends Component
         $articleQuery = Article::query();
 
         if($this->search != ""){
+            $this->resetPage();
             $articleQuery->where("nom", "LIKE",  "%". $this->search ."%")
                          ->orWhere("noSerie","LIKE",  "%". $this->search ."%");
         }
@@ -46,6 +81,10 @@ class ArticleComp extends Component
 
         if($this->filtreEtat != ""){
             $articleQuery->where("estDisponible", $this->filtreEtat);
+        }
+
+        if($this->editArticle != []){
+            $this->showUpdateButton();
         }
 
 
@@ -63,6 +102,41 @@ class ArticleComp extends Component
         }
     }
 
+    public function updateArticle(){
+        $this->validate();
+
+        $article = Article::find($this->editArticle["id"]);
+
+        $article->fill($this->editArticle);
+
+        if($this->editPhoto != null){
+            $path = $this->editPhoto->store("upload", "public");
+            $imagePath = "storage/".$path;
+            $image = Image::make(public_path($imagePath))->fit(200, 200);
+
+            $image->save();
+
+            Storage::disk("local")->delete(str_replace("storage/", "public/", $article->imageUrl));
+
+            $article->imageUrl = $imagePath;
+        }
+
+        $article->save();
+
+        collect($this->editArticle["article_proprietes"])
+        ->each(
+                fn($item) => ArticlePropriete::where([
+                    "article_id" => $item["article_id"],
+                    "propriete_article_id" => $item["propriete_article_id"]
+                ])->update(["valeur" => $item["valeur"]])
+            );
+
+        $this->dispatchBrowserEvent("showSuccessMessage", ["message"=> "Article mis à jour avec succès!"]);
+        $this->dispatchBrowserEvent("closeEditModal");
+        
+       
+    }
+
     public function showAddArticleModal(){
         $this->resetValidation();
         $this->addArticle = [];
@@ -74,24 +148,42 @@ class ArticleComp extends Component
 
     public function closeModal(){
         $this->dispatchBrowserEvent("closeModal");
-
-
     }
 
-    public function editArticle(Article $article){
 
+    public function closeEditModal(){
+        
+        $this->dispatchBrowserEvent("closeEditModal");
+    }
+
+    public function editArticle($articleId){
+        $this->editArticle = Article::with("article_proprietes","article_proprietes.propriete", "type")->find($articleId)->toArray();
+
+        $this->editArticleOldValues = $this->editArticle;
+
+        $this->editPhoto = null;
+        $this->inputEditFileIterator++;
+       
+        $this->dispatchBrowserEvent("showEditModal");
     }
 
     public function confirmDelete(Article $article){
-
+        $this->dispatchBrowserEvent("showConfirmMessage", ["message"=> [
+            "text" => "Vous êtes sur le point de supprimer ". $article->nom ." de la liste des articles. Voulez-vous continuer?",
+            "title" => "Êtes-vous sûr de continuer?",
+            "type" => "warning",
+            "data" => [
+                "article_id" => $article->id
+            ]
+        ]]); 
     }
 
     public function ajoutArticle(){
         //dump($this->addArticle);
 
         $validateArr = [
-            "addArticle.nom" => "string|min:3|required",
-            "addArticle.noSerie" => "string|max:50|min:3|required",
+            "addArticle.nom" => "string|min:3|required|unique:articles,nom",
+            "addArticle.noSerie" => "string|max:50|min:3|required|unique:articles,noSerie",
             "addArticle.type" => "required",
             "addPhoto" => "image|max:10240" // 10mb
 
@@ -121,13 +213,16 @@ class ArticleComp extends Component
 
         // Validation des erreurs
         $validatedData = $this->validate($validateArr, $customErrMessages);
-        $imagePath = "";
+
+        // par défaut notre image est une placeholder
+        $imagePath = "images/imageplaceholder.png";
 
         if($this->addPhoto != null){
 
-            $imagePath = $this->addPhoto->store('upload', 'public');
+            $path = $this->addPhoto->store('upload', 'public');
+            $imagePath = "storage/".$path;
 
-            $image = Image::make(public_path("storage/".$imagePath))->fit(200, 200);
+            $image = Image::make(public_path($imagePath))->fit(200, 200);
             $image->save();
 
         }
@@ -170,5 +265,19 @@ class ArticleComp extends Component
                 $storage->delete($pathFileName);
             }
         }
+    }
+
+    public function deleteArticle(Article $article){
+        if(count($article->locations)>0) return;
+
+        if(count($article->article_proprietes) > 0)
+            $article->article_proprietes()->where("article_id", $article->id)->delete();
+        
+        if(count($article->tarifications) > 0)
+            $article->tarifications()->where("article_id", $article->id)->delete();
+
+        $article->delete();
+
+        $this->dispatchBrowserEvent("showSuccessMessage", ["message"=>"Article supprimé avec succès!"]);
     }
 }
