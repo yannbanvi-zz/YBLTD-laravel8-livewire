@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\ArticleComp;
+use App\Http\Livewire\clientComp;
+use App\Http\Livewire\TarifComp;
 use App\Http\Livewire\TypeArticleComp;
 use App\Http\Livewire\Utilisateurs;
 use App\Models\Article;
@@ -48,10 +50,18 @@ Route::group([
 
         Route::get("/types", TypeArticleComp::class)->name("types");
         Route::get("/articles", ArticleComp::class)->name("articles");
+        Route::get("/articles/{articleId}/tarifs", TarifComp::class)->name("articles.tarifs");
 
     });
 
 
+});
+
+Route::group([
+    "middleware" => ["auth", "auth.employe"],
+    'as' => 'employe.'
+], function(){
+    Route::get("/clients", clientComp::class)->name("clients.index");
 });
 
 

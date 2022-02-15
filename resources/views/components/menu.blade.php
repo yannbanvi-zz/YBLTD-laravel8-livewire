@@ -3,7 +3,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
         <li class="nav-item">
-            <a href="{{ route('home') }}" class="nav-link {{ setMenuActive('home') }}">
+            <a href="{{ route('home') }}" class="nav-link {{ setMenuClass('home', 'active') }}">
               <i class="nav-icon fas fa-home"></i>
               <p>
                 Accueil
@@ -50,7 +50,7 @@
               <li class="nav-item ">
                 <a
                 href="{{ route('admin.habilitations.users.index') }}"
-                class="nav-link {{ setMenuActive('admin.habilitations.users.index') }}"
+                class="nav-link {{ setMenuClass('admin.habilitations.users.index', 'active') }}"
                 >
                   <i class=" nav-icon fas fa-users-cog"></i>
                   <p>Utilisateurs</p>
@@ -76,24 +76,19 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="{{ route('admin.gestarticles.types') }}"
-                        class="nav-link {{ setMenuActive('admin.gestarticles.types') }}">
+                        class="nav-link {{ setMenuClass('admin.gestarticles.types', 'active') }}">
                     <i class="nav-icon far fa-circle"></i>
                     <p>Type d'articles</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.gestarticles.articles') }}"
-                        class="nav-link {{ setMenuActive('admin.gestarticles.articles') }}">
+                        class="nav-link {{ setMenuClass('admin.gestarticles.articles', 'active') }}">
                     <i class="nav-icon fas fa-list-ul"></i>
                     <p>Articles</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-sliders-h"></i>
-                    <p>Tarifications</p>
-                    </a>
-                </li>
+                
             </ul>
         </li>
         @endcan
@@ -101,7 +96,7 @@
         @can("employe")
         <li class="nav-header">LOCATION</li>
         <li class="nav-item">
-            <a href="" class="nav-link ">
+            <a href="{{ route('employe.clients.index') }}" class="nav-link ">
                 <i class="nav-icon fas fa-users"></i>
                 <p>
                 Gestion des clients

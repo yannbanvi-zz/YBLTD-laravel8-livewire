@@ -9,6 +9,8 @@ class Client extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function locations(){
         return $this->hasMany(Location::class);
     }

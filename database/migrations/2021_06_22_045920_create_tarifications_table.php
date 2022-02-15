@@ -19,6 +19,8 @@ class CreateTarificationsTable extends Migration
             $table->foreignId("duree_location_id")->constrained();
             $table->foreignId("article_id")->constrained();
             $table->timestamps();
+
+            $table->unique(["duree_location_id", "article_id"]);
         });
 
         Schema::enableForeignKeyConstraints();

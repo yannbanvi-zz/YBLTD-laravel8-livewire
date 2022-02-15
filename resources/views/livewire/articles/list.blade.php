@@ -68,6 +68,11 @@
                                     </td>
                                     <td class="text-center">{{ optional($article->created_at)->diffForHumans() }}</td>
                                     <td class="text-center">
+
+                                        <a 
+                                        title="Tarifs {{ $article->nom }}"
+                                        href="{{ route('admin.gestarticles.articles.tarifs', ['articleId'=> $article->id]) }}" class="btn btn-link" > <i class="fas fa-money-check"></i> </a>
+
                                         <button class="btn btn-link" wire:click="editArticle({{$article->id}})"> <i class="far fa-edit"></i> </button>
 
                                         <button class="btn btn-link" wire:click="confirmDelete({{$article->id}})"> <i class="far fa-trash-alt"></i> </button>
